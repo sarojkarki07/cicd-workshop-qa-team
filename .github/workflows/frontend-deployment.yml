@@ -19,10 +19,10 @@ jobs:
               node-version: 20
 
          - name: Install dependencies
-           run: npm install
+           run: cd frontend/ && npm install
 
          - name: Build project
-           run: npm run build
+           run: cd frontend/ && npm run build
 
          - name: Configure AWS Credentials
            uses: aws-actions/configure-aws-credentials@v2
@@ -33,12 +33,12 @@ jobs:
 
          - name: Deploy to S3
            run: |
-              aws s3 sync build/ s3://your-s3-bucket-name --delete
+              aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
            env:
               AWS_REGION: us-east-1
 
          - name: Invalidate CloudFront Cache
            run: |
               aws cloudfront create-invalidation \
-                --distribution-id YOUR_CLOUDFRONT_DISTRIBUTION_ID \
+                --distribution-id ${{ secrets.CLOUDFRONT_DISTRIBUTION_ID }} \
                 --paths "/*"
