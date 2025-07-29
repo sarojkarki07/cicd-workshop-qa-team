@@ -33,6 +33,7 @@ jobs:
 
          - name: Deploy to S3
            run: |
+              cd frontend
               aws s3 sync build/ s3://${{ secrets.S3_BUCKET_NAME }} --delete
            env:
               AWS_REGION: us-east-1
